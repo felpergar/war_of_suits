@@ -1,11 +1,16 @@
 package felipe.pereira.war_of_suits.view.game
 
+import androidx.lifecycle.LiveData
 import felipe.pereira.war_of_suits.view.common.Presenter
+import felipe.pereira.war_of_suits.view.game.cardsmanager.PokerCardViewEntity
 import felipe.pereira.war_of_suits.view.game.cardsmanager.Result
 
 class GamePresenter(
     private val cardsManager: CardsManager = CardsManager()
 ) : Presenter<GamePresenter.GameView>() {
+
+    val currentScorePlayerOne: LiveData<List<PokerCardViewEntity>> = cardsManager.discardedCardsPlayerOneLiveData
+    val currentScorePlayerTwo: LiveData<List<PokerCardViewEntity>> = cardsManager.discardedCardsPlayerTwoLiveData
 
     override fun onViewAttached() {
         getNullableView()?.initView()
@@ -27,7 +32,6 @@ class GamePresenter(
                 cardsManager.discardedCardsPlayerOne.size < cardsManager.discardedCardsPlayerTwo.size -> Result.TWO
                 else -> Result.EQUAL
             }
-
             getNullableView()?.showFinalResult(finalResult)
         }
     }

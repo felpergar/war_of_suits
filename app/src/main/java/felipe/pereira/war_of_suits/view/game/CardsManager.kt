@@ -1,5 +1,6 @@
 package felipe.pereira.war_of_suits.view.game
 
+import androidx.lifecycle.MutableLiveData
 import felipe.pereira.war_of_suits.view.game.cardsmanager.Result
 import felipe.pereira.war_of_suits.view.game.cardsmanager.PokerCardViewEntity
 import felipe.pereira.war_of_suits.view.game.cardsmanager.Suit
@@ -12,9 +13,12 @@ class CardsManager {
     private val MAX_CARDS_FOR_SUITS = 13
 
     val cardsPlayerOne = mutableListOf<PokerCardViewEntity>()
-    val cardsPlayerTwo = mutableListOf<PokerCardViewEntity>()
+    private val cardsPlayerTwo = mutableListOf<PokerCardViewEntity>()
     val discardedCardsPlayerOne = mutableListOf<PokerCardViewEntity>()
     val discardedCardsPlayerTwo = mutableListOf<PokerCardViewEntity>()
+
+    val discardedCardsPlayerOneLiveData = MutableLiveData<List<PokerCardViewEntity>>()
+    val discardedCardsPlayerTwoLiveData = MutableLiveData<List<PokerCardViewEntity>>()
 
     fun getCardsShuffled() {
         val suits = Suit.values()
@@ -58,8 +62,14 @@ class CardsManager {
         }
 
         when (result) {
-            Result.ONE -> discardedCardsPlayerOne.addAll(listOf(cardPlayerOne, cardPlayerTwo))
-            Result.TWO -> discardedCardsPlayerTwo.addAll(listOf(cardPlayerOne, cardPlayerTwo))
+            Result.ONE -> {
+                discardedCardsPlayerOne.addAll(listOf(cardPlayerOne, cardPlayerTwo))
+                discardedCardsPlayerOneLiveData.postValue(discardedCardsPlayerOne)
+            }
+            Result.TWO -> {
+                discardedCardsPlayerTwo.addAll(listOf(cardPlayerOne, cardPlayerTwo))
+                discardedCardsPlayerTwoLiveData.postValue(discardedCardsPlayerTwo)
+            }
             Result.EQUAL -> { }
         }
 

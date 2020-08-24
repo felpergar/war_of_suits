@@ -13,6 +13,7 @@
         android:layout_marginTop="150dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:text="0"
         tools:text="Score Player 1" />
 
     <TextView
@@ -23,6 +24,7 @@
         android:layout_marginEnd="50dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        android:text="0"
         tools:text="Score Player 2" />
 
     <TextView
