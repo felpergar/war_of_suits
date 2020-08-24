@@ -1,4 +1,4 @@
-package felipe.pereira.war_of_suits.view.first_screen
+package felipe.pereira.war_of_suits.view.firstscreen
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
