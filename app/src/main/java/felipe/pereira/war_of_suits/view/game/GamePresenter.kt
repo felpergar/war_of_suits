@@ -11,9 +11,9 @@ class GamePresenter(
 ) : Presenter<GamePresenter.GameView>() {
 
     val currentScoreMagneto: LiveData<List<PokerCardViewEntity>> =
-        cardsManager.discardedCardsPlayerOneLiveData
+        cardsManager.discardedCardsMagnetoLiveData
     val currentScoreProfessor: LiveData<List<PokerCardViewEntity>> =
-        cardsManager.discardedCardsPlayerTwoLiveData
+        cardsManager.discardedCardsProfessorLiveData
 
     override fun onViewAttached() {
         getNullableView()?.initView()
@@ -30,12 +30,12 @@ class GamePresenter(
     }
 
     fun playRound() {
-        if (cardsManager.cardsMagneto.isNotEmpty()) {
+        if (cardsManager.getMagnetoCards().isNotEmpty()) {
             cardsManager.playRound(::showResult)
         } else {
             val finalResult = when {
-                cardsManager.discardedCardsMagneto.size > cardsManager.discardedCardsProfessor.size -> Result.MAGNETO
-                cardsManager.discardedCardsMagneto.size < cardsManager.discardedCardsProfessor.size -> Result.PROFESSOR
+                cardsManager.getDiscardedCardsMagneto().size > cardsManager.getDiscardedCardsProfessor().size -> Result.MAGNETO
+                cardsManager.getDiscardedCardsMagneto().size < cardsManager.getDiscardedCardsProfessor().size -> Result.PROFESSOR
                 else -> Result.EQUAL
             }
             getNullableView()?.showFinalResult(finalResult)
@@ -44,16 +44,17 @@ class GamePresenter(
 
     private fun showResult(
         result: Result,
-        playerOneCard: PokerCardViewEntity,
-        playerTwoCard: PokerCardViewEntity
+        magnetoCard: PokerCardViewEntity,
+        professorCard: PokerCardViewEntity
     ) {
-        getNullableView()?.showResult(result, playerOneCard, playerTwoCard)
+        getNullableView()?.showResult(result, magnetoCard, professorCard)
     }
 
     fun resetGame() {
         cardsManager.initCardsShuffled(::showSuitsPriority)
         getNullableView()?.resetView()
     }
+
     interface GameView : View {
         fun showResult(result: Result, magnetoCard: PokerCardViewEntity, professorCard: PokerCardViewEntity)
         fun showFinalResult(result: Result)

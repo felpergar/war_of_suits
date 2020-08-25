@@ -5,20 +5,20 @@ import felipe.pereira.war_of_suits.view.game.cardsmanager.Result
 import felipe.pereira.war_of_suits.view.game.cardsmanager.PokerCardViewEntity
 import felipe.pereira.war_of_suits.view.game.cardsmanager.Suit
 
-class CardsManager {
+class CardsManager(
+    val discardedCardsMagnetoLiveData: MutableLiveData<List<PokerCardViewEntity>> = MutableLiveData<List<PokerCardViewEntity>>(),
+    val discardedCardsProfessorLiveData: MutableLiveData<List<PokerCardViewEntity>> = MutableLiveData<List<PokerCardViewEntity>>()
+) {
 
     private val cards = mutableListOf<PokerCardViewEntity>()
     private val suitsPriority =
         mutableListOf(Suit.SPADES, Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS)
     private val MAX_CARDS_FOR_SUITS = 13
 
-    val cardsMagneto = mutableListOf<PokerCardViewEntity>()
+    private val cardsMagneto = mutableListOf<PokerCardViewEntity>()
     private val cardsProfessor = mutableListOf<PokerCardViewEntity>()
-    val discardedCardsMagneto = mutableListOf<PokerCardViewEntity>()
-    val discardedCardsProfessor = mutableListOf<PokerCardViewEntity>()
-
-    val discardedCardsPlayerOneLiveData = MutableLiveData<List<PokerCardViewEntity>>()
-    val discardedCardsPlayerTwoLiveData = MutableLiveData<List<PokerCardViewEntity>>()
+    private val discardedCardsMagneto = mutableListOf<PokerCardViewEntity>()
+    private val discardedCardsProfessor = mutableListOf<PokerCardViewEntity>()
 
     fun createCards() {
         suitsPriority.forEach { suit ->
@@ -33,8 +33,8 @@ class CardsManager {
         cardsProfessor.clear()
         discardedCardsMagneto.clear()
         discardedCardsProfessor.clear()
-        discardedCardsPlayerOneLiveData.postValue(listOf())
-        discardedCardsPlayerTwoLiveData.postValue(listOf())
+        discardedCardsMagnetoLiveData.postValue(listOf())
+        discardedCardsProfessorLiveData.postValue(listOf())
 
         cards.shuffle()
         suitsPriority.shuffle()
@@ -49,7 +49,7 @@ class CardsManager {
         }
     }
 
-    fun playRound(showResult: (Result, PokerCardViewEntity, PokerCardViewEntity) -> Unit?) {
+    fun playRound(showResult: ((Result, PokerCardViewEntity, PokerCardViewEntity) -> Unit)) {
         val cardPlayerOne = cardsMagneto.first()
         cardsMagneto.remove(cardPlayerOne)
         val cardPlayerTwo = cardsProfessor.first()
@@ -72,15 +72,22 @@ class CardsManager {
         when (result) {
             Result.MAGNETO -> {
                 discardedCardsMagneto.addAll(listOf(cardPlayerOne, cardPlayerTwo))
-                discardedCardsPlayerOneLiveData.postValue(discardedCardsMagneto)
+                discardedCardsMagnetoLiveData.postValue(discardedCardsMagneto)
             }
             Result.PROFESSOR -> {
                 discardedCardsProfessor.addAll(listOf(cardPlayerOne, cardPlayerTwo))
-                discardedCardsPlayerTwoLiveData.postValue(discardedCardsProfessor)
+                discardedCardsProfessorLiveData.postValue(discardedCardsProfessor)
             }
             Result.EQUAL -> { }
         }
 
         showResult(result, cardPlayerOne, cardPlayerTwo)
     }
+
+    fun getMagnetoCards() = cardsMagneto.toList()
+
+    fun getDiscardedCardsMagneto() = discardedCardsMagneto.toList()
+
+    fun getDiscardedCardsProfessor() = discardedCardsProfessor.toList()
+
 }
