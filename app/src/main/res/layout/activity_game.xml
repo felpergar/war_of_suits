@@ -6,58 +6,136 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/scorePlayer1TextView"
+        android:id="@+id/suitPriorityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="150dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="0"
-        tools:text="Score Player 1" />
-
-    <TextView
-        android:id="@+id/scorePlayer2TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="150dp"
-        android:layout_marginEnd="50dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="0"
-        tools:text="Score Player 2" />
-
-    <TextView
-        android:id="@+id/roundResultTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        tools:text="PLAYER 1 WINS THE ROUND"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="24dp"
+        android:text="@string/suit_priority"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/finalResultTextView"
+        android:id="@+id/currentSuitPriorityTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="PLAYER 1 WINS THE GAME"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/suitPriorityTextView"
+        tools:text="Spades, Clubs, Diamonds, Hearts" />
+
+    <TextView
+        android:id="@+id/scoreMagnetoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="120dp"
+        android:text="@string/score_magneto"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/currentScoreMagnetoTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/start_score"
+        app:layout_constraintEnd_toEndOf="@id/scoreMagnetoTextView"
+        app:layout_constraintStart_toStartOf="@id/scoreMagnetoTextView"
+        app:layout_constraintTop_toBottomOf="@id/scoreMagnetoTextView"
+        tools:text="Score Player 1" />
+
+    <TextView
+        android:id="@+id/scoreProfessorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginEnd="24dp"
+        android:text="@string/score_professor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/currentScoreProfessorTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/start_score"
+        app:layout_constraintEnd_toEndOf="@id/scoreProfessorTextView"
+        app:layout_constraintStart_toStartOf="@id/scoreProfessorTextView"
+
+        app:layout_constraintTop_toBottomOf="@id/scoreProfessorTextView"
+        tools:text="Score Player 2" />
+
+    <TextView
+        android:id="@+id/cardPlayedByMagneto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="120dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardPlayedByProfessor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/currentSuitPriorityTextView"
+        tools:text="3 of Spades" />
+
+    <TextView
+        android:id="@+id/cardPlayedByProfessor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/cardPlayedByMagneto"
+        tools:text="3 of Spades" />
+
+    <TextView
+        android:id="@+id/roundResultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"/>
+        tools:text="PLAYER 1 WINS THE ROUND" />
+
+    <TextView
+        android:id="@+id/finalResultTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="PLAYER 1 WINS THE GAME" />
 
     <Button
         android:id="@+id/playGameButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="150dp"
+        android:background="@drawable/main_button_background"
         android:text="@string/play_game_button_text"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/resetGameButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginBottom="100dp"
-        android:textColor="@color/white"
-        android:background="@drawable/button_background"/>
+        app:layout_constraintTop_toBottomOf="@+id/playGameButton"
+        android:background="@drawable/secondary_button_background"
+        android:textColor="@color/black"
+        android:text="@string/reset"
+        />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

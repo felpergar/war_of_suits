@@ -2,4 +2,16 @@
   <string name="app_name">war_of_suits</string>
   <string name="play_game_button_text">PLAY</string>
   <string name="start_game_button_text">START</string>
+  <string name="card_played">%1$s plays %2$s of %3$s</string>
+  <string name="magneto">Magneto</string>
+  <string name="professor">Professor</string>
+  <string name="suit_priority">Suit priority</string>
+  <string name="final_result">%1$s wins the game</string>
+  <string name="game_equal">The game is equal</string>
+  <string name="round_equal">The round is equal</string>
+  <string name="round_result">%1$s wins the round</string>
+  <string name="score_magneto">Magneto´s score</string>
+  <string name="score_professor">Professor´s score</string>
+  <string name="reset">RESET GAME</string>
+  <string name="start_score">0</string>
 </resources>

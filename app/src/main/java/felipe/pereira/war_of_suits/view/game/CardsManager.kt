@@ -9,70 +9,78 @@ class CardsManager {
 
     private val cards = mutableListOf<PokerCardViewEntity>()
     private val suitsPriority =
-        mutableListOf(Suit.SPADES, Suit.CLUBS, Suit.DIAMONDS, Suit.DIAMONDS)
+        mutableListOf(Suit.SPADES, Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS)
     private val MAX_CARDS_FOR_SUITS = 13
 
-    val cardsPlayerOne = mutableListOf<PokerCardViewEntity>()
-    private val cardsPlayerTwo = mutableListOf<PokerCardViewEntity>()
-    val discardedCardsPlayerOne = mutableListOf<PokerCardViewEntity>()
-    val discardedCardsPlayerTwo = mutableListOf<PokerCardViewEntity>()
+    val cardsMagneto = mutableListOf<PokerCardViewEntity>()
+    private val cardsProfessor = mutableListOf<PokerCardViewEntity>()
+    val discardedCardsMagneto = mutableListOf<PokerCardViewEntity>()
+    val discardedCardsProfessor = mutableListOf<PokerCardViewEntity>()
 
     val discardedCardsPlayerOneLiveData = MutableLiveData<List<PokerCardViewEntity>>()
     val discardedCardsPlayerTwoLiveData = MutableLiveData<List<PokerCardViewEntity>>()
 
-    fun getCardsShuffled() {
-        val suits = Suit.values()
-
-        suits.forEach { suit ->
+    fun createCards() {
+        suitsPriority.forEach { suit ->
             for (x in 1..MAX_CARDS_FOR_SUITS) {
                 cards.add(PokerCardViewEntity(x, suit))
             }
         }
+    }
+
+    fun initCardsShuffled(showSuitsPriority: (MutableList<Suit>) -> Unit) {
+        cardsMagneto.clear()
+        cardsProfessor.clear()
+        discardedCardsMagneto.clear()
+        discardedCardsProfessor.clear()
+        discardedCardsPlayerOneLiveData.postValue(listOf())
+        discardedCardsPlayerTwoLiveData.postValue(listOf())
 
         cards.shuffle()
         suitsPriority.shuffle()
+        showSuitsPriority(suitsPriority)
 
         var index = 0
 
         while (index < (cards.size - 1)) {
-            cardsPlayerOne.add(cards[index])
-            cardsPlayerTwo.add(cards[index + 1])
+            cardsMagneto.add(cards[index])
+            cardsProfessor.add(cards[index + 1])
             index += 2
         }
     }
 
-    fun playRound(): Result {
-        val cardPlayerOne = cardsPlayerOne.first()
-        cardsPlayerOne.remove(cardPlayerOne)
-        val cardPlayerTwo = cardsPlayerTwo.first()
-        cardsPlayerTwo.remove(cardPlayerTwo)
+    fun playRound(showResult: (Result, PokerCardViewEntity, PokerCardViewEntity) -> Unit?) {
+        val cardPlayerOne = cardsMagneto.first()
+        cardsMagneto.remove(cardPlayerOne)
+        val cardPlayerTwo = cardsProfessor.first()
+        cardsProfessor.remove(cardPlayerTwo)
 
         val result = when {
-            cardPlayerOne.number > cardPlayerTwo.number -> Result.ONE
-            cardPlayerOne.number < cardPlayerTwo.number -> Result.TWO
+            cardPlayerOne.number > cardPlayerTwo.number -> Result.MAGNETO
+            cardPlayerOne.number < cardPlayerTwo.number -> Result.PROFESSOR
             else -> {
                 val indexSuitPlayerOne = suitsPriority.indexOfFirst { it == cardPlayerOne.suit }
                 val indexSuitPlayerTwo = suitsPriority.indexOfFirst { it == cardPlayerTwo.suit }
                 when {
-                    indexSuitPlayerOne < indexSuitPlayerTwo -> Result.ONE
-                    indexSuitPlayerOne > indexSuitPlayerTwo -> Result.TWO
+                    indexSuitPlayerOne < indexSuitPlayerTwo -> Result.MAGNETO
+                    indexSuitPlayerOne > indexSuitPlayerTwo -> Result.PROFESSOR
                     else -> Result.EQUAL
                 }
             }
         }
 
         when (result) {
-            Result.ONE -> {
-                discardedCardsPlayerOne.addAll(listOf(cardPlayerOne, cardPlayerTwo))
-                discardedCardsPlayerOneLiveData.postValue(discardedCardsPlayerOne)
+            Result.MAGNETO -> {
+                discardedCardsMagneto.addAll(listOf(cardPlayerOne, cardPlayerTwo))
+                discardedCardsPlayerOneLiveData.postValue(discardedCardsMagneto)
             }
-            Result.TWO -> {
-                discardedCardsPlayerTwo.addAll(listOf(cardPlayerOne, cardPlayerTwo))
-                discardedCardsPlayerTwoLiveData.postValue(discardedCardsPlayerTwo)
+            Result.PROFESSOR -> {
+                discardedCardsProfessor.addAll(listOf(cardPlayerOne, cardPlayerTwo))
+                discardedCardsPlayerTwoLiveData.postValue(discardedCardsProfessor)
             }
             Result.EQUAL -> { }
         }
 
-        return result
+        showResult(result, cardPlayerOne, cardPlayerTwo)
     }
 }
