@@ -8,7 +8,12 @@ class MainPresenter : Presenter<MainPresenter.MainView>() {
         getNullableView()?.initView()
     }
 
+    fun onStartGameButtonClicked() {
+        getNullableView()?.startGameActivity()
+    }
+
     interface MainView : View {
         fun initView()
+        fun startGameActivity()
     }
 }

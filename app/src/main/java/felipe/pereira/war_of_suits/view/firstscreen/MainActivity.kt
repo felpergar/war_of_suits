@@ -19,8 +19,12 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
 
     override fun initView() {
         startGameButton.setOnClickListener {
-            startActivity(GameActivity.getCallingIntent(this))
+            presenter.onStartGameButtonClicked()
         }
+    }
+
+    override fun startGameActivity() {
+        startActivity(GameActivity.getCallingIntent(this))
     }
 
     override fun onDestroy() {
