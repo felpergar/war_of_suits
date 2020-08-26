@@ -1,8 +1,18 @@
 package felipe.pereira.war_of_suits.view.game
 
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.*
-import felipe.pereira.war_of_suits.view.game.model.PokerCardViewEntity
+import felipe.pereira.war_of_suits.common.shouldBe
+import felipe.pereira.war_of_suits.domain.model.PokerCard
+import felipe.pereira.war_of_suits.domain.model.RoundResult
+import felipe.pereira.war_of_suits.domain.usecase.GetSuitPriority
+import felipe.pereira.war_of_suits.domain.usecase.InitGame
+import felipe.pereira.war_of_suits.domain.usecase.PlayRound
+import felipe.pereira.war_of_suits.view.game.enums.CardValue
+import felipe.pereira.war_of_suits.view.game.enums.Result
 import felipe.pereira.war_of_suits.view.game.enums.Suit
+import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
+import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -10,111 +20,98 @@ import org.mockito.Mock
 class GamePresenterTest {
 
     private lateinit var presenter: GamePresenter
-    @Mock private lateinit var cardManager: CardsManager
+    private lateinit var initGame: InitGame
+    private lateinit var playRound: PlayRound
+    private lateinit var getSuitPriority: GetSuitPriority
+    private lateinit var currentScoreMagnetoMutableLiveData: MutableLiveData<String>
+    private lateinit var currentScoreProfessorMutableLiveData: MutableLiveData<String>
+
     @Mock private lateinit var view: GameActivity
 
     @Before
     fun `set up`() {
-        cardManager = mock()
         view = mock()
-        presenter = GamePresenter(cardManager)
+        initGame = mock()
+        playRound = mock()
+        getSuitPriority = mock()
+        currentScoreMagnetoMutableLiveData = mock()
+        currentScoreProfessorMutableLiveData = mock()
+        presenter = GamePresenter(initGame, playRound, getSuitPriority, currentScoreMagnetoMutableLiveData, currentScoreProfessorMutableLiveData)
+
+        whenever(initGame.execute(any())).thenReturn(Single.just(Unit))
+        whenever(getSuitPriority.execute(any())).thenReturn(Single.just(listOf()))
+    }
+
+    @Test
+    fun `should execute initGame when view is attached`() {
 
         presenter.attachView(view)
+
+        verify(initGame).execute(any())
     }
 
     @Test
-    fun `should execute createCards when view is attached`() {
+    fun `should execute getSuitPriority when view is attached`() {
 
-        verify(cardManager).createCards()
+        presenter.attachView(view)
+
+        verify(getSuitPriority).execute(any())
     }
 
     @Test
-    fun `should execute initCardsShuffled when view is attached`() {
+    fun `should execute showSuitsPriority when getSuitPriority was successful`() {
+        val suits = listOf(Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES)
+        val captor = argumentCaptor<List<Suit>>()
+        whenever(getSuitPriority.execute(any())).thenReturn(Single.just(suits))
 
-        verify(cardManager).initCardsShuffled(any())
+        presenter.attachView(view)
+
+        verify(view).showSuitsPriority(captor.capture())
+        captor.firstValue[0] shouldBe suits[0]
+        captor.firstValue[1] shouldBe suits[1]
+        captor.firstValue[2] shouldBe suits[2]
+        captor.firstValue[3] shouldBe suits[3]
     }
 
     @Test
-    fun `should execute playRound in cardsManager when Magneto´s cards list is not Empty after execute playRound`() {
-        whenever(cardManager.getMagnetoCards()).thenReturn(mutableListOf(
-            PokerCardViewEntity(
-                1,
-                Suit.DIAMONDS
-            )
-        ))
+    fun `should execute showResult in view when playRound was successful`() {
+        val result = RoundResult(Result.EQUAL, PokerCard(CardValue.A, Suit.SPADES), PokerCard(CardValue.EIGHT, Suit.HEARTS))
+        whenever(playRound.execute(any())).thenReturn(Single.just(result))
+        val captor = argumentCaptor<RoundResultViewEntity>()
 
+        presenter.attachView(view)
         presenter.playRound()
 
-        verify(cardManager).playRound(any())
+        verify(view).showResult(captor.capture())
+        captor.firstValue.winner shouldBe result.winner
+        captor.firstValue.magnetoCard.number shouldBe result.magnetoCard.number
+        captor.firstValue.magnetoCard.suit shouldBe result.magnetoCard.suit
+        captor.firstValue.professorCard.number shouldBe result.professorCard.number
+        captor.firstValue.professorCard.suit shouldBe result.professorCard.suit
     }
 
-//    @Test
-//    fun `should execute showFinalResult in view when Magneto´s cards has last round when playRound is executed`() {
-//        whenever(cardManager.getMagnetoCards()).thenReturn(listOf())
-//
-//        presenter.playRound()
-//
-//        verify(view).showFinalResult(any())
-//    }
-
     @Test
-    fun `should execute initCardsShuffled when resetGame is executed`() {
+    fun `should execute initGame when resetGame is executed`() {
 
         presenter.resetGame()
 
-        verify(cardManager, times(2)).initCardsShuffled(any())
+        verify(initGame).execute(any())
     }
 
     @Test
-    fun `should execute resetView in view when resetGame is executed`() {
+    fun `should execute getSuitPriority when resetGame is executed`() {
 
+        presenter.resetGame()
+
+        verify(getSuitPriority).execute(any())
+    }
+
+    @Test
+    fun `should execute resetView when resetGame is executed`() {
+
+        presenter.attachView(view)
         presenter.resetGame()
 
         verify(view).resetView()
     }
-
-//    @Test
-//    fun `should send Magneto as result when his discarded cards are bigger than Professor´s cards and Magneto´s cards list is empty when playRound is executed`(){
-//        whenever(cardManager.getDiscardedCardsMagneto()).thenReturn(listOf(getPokerCard()))
-//        whenever(cardManager.getDiscardedCardsProfessor()).thenReturn(listOf())
-//        whenever(cardManager.getMagnetoCards()).thenReturn(listOf())
-//        val captor = argumentCaptor<Result>()
-//
-//        presenter.playRound()
-//
-//        verify(view).showFinalResult(captor.capture())
-//        captor.firstValue shouldBe Result.MAGNETO
-//    }
-
-//    @Test
-//    fun `should send Professor as result when his discarded cards are bigger than Magneto´s cards and Magneto´s cards list is empty when playRound is executed`(){
-//        whenever(cardManager.getDiscardedCardsMagneto()).thenReturn(listOf())
-//        whenever(cardManager.getDiscardedCardsProfessor()).thenReturn(listOf(getPokerCard()))
-//        whenever(cardManager.getMagnetoCards()).thenReturn(listOf())
-//        val captor = argumentCaptor<Result>()
-//
-//        presenter.playRound()
-//
-//        verify(view).showFinalResult(captor.capture())
-//        captor.firstValue shouldBe Result.PROFESSOR
-//    }
-
-//    @Test
-//    fun `should send Equal as result when Magneto´s cards are equal than Professor´s cards and Magneto´s cards list is empty when playRound is executed`(){
-//        whenever(cardManager.getDiscardedCardsMagneto()).thenReturn(listOf())
-//        whenever(cardManager.getDiscardedCardsProfessor()).thenReturn(listOf())
-//        whenever(cardManager.getMagnetoCards()).thenReturn(listOf())
-//        val captor = argumentCaptor<Result>()
-//
-//        presenter.playRound()
-//
-//        verify(view).showFinalResult(captor.capture())
-//        captor.firstValue shouldBe Result.EQUAL
-//    }
-
-    private fun getPokerCard() =
-        PokerCardViewEntity(
-            1,
-            Suit.DIAMONDS
-        )
 }

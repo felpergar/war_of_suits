@@ -92,7 +92,7 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         presenter.detachView()
     }
 
-    override fun startRounds() {
+    override fun showRounds() {
         startActivity(HistoryRoundsActivity.getCallingIntent(this))
     }
 

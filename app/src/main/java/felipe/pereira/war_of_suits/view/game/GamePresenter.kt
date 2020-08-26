@@ -15,14 +15,14 @@ import felipe.pereira.war_of_suits.view.game.model.transformToUi
 class GamePresenter(
     private val initGame: InitGame,
     private val playRound: PlayRound,
-    private val getSuitPriority: GetSuitPriority
+    private val getSuitPriority: GetSuitPriority,
+    private val currentScoreMagnetoMutableLiveData: MutableLiveData<String> = MutableLiveData<String>(),
+    private val currentScoreProfessorMutableLiveData: MutableLiveData<String> = MutableLiveData<String>()
 ) : Presenter<GamePresenter.GameView>() {
 
     private val discardedCardsMagneto = mutableListOf<PokerCardViewEntity>()
     private val discardedCardsProfessor = mutableListOf<PokerCardViewEntity>()
 
-    private val currentScoreMagnetoMutableLiveData = MutableLiveData<String>()
-    private val currentScoreProfessorMutableLiveData = MutableLiveData<String>()
     val currentScoreMagnetoLiveData: LiveData<String> = currentScoreMagnetoMutableLiveData
     val currentScoreProfessorLiveData: LiveData<String> = currentScoreProfessorMutableLiveData
 
@@ -63,8 +63,7 @@ class GamePresenter(
         if (round.winner == Result.MAGNETO) {
             discardedCardsMagneto.addAll(listOf(round.magnetoCard, round.professorCard))
             currentScoreMagnetoMutableLiveData.postValue(discardedCardsMagneto.size.toString())
-        }
-        else {
+        } else {
             discardedCardsProfessor.addAll(listOf(round.magnetoCard, round.professorCard))
             currentScoreProfessorMutableLiveData.postValue(discardedCardsProfessor.size.toString())
         }
@@ -76,7 +75,6 @@ class GamePresenter(
                 else -> Result.EQUAL
             }
             getNullableView()?.showFinalResult(finalResult)
-            getNullableView()?.startRounds()
         }
     }
 
@@ -96,7 +94,7 @@ class GamePresenter(
         fun initView()
         fun showSuitsPriority(suitsPriority: List<Suit>)
         fun resetView()
-        fun startRounds()
+        fun showRounds()
     }
 
     companion object {
