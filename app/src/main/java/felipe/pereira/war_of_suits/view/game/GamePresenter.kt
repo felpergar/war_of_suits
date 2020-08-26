@@ -76,6 +76,7 @@ class GamePresenter(
                 else -> Result.EQUAL
             }
             getNullableView()?.showFinalResult(finalResult)
+            getNullableView()?.startRounds()
         }
     }
 
@@ -95,6 +96,7 @@ class GamePresenter(
         fun initView()
         fun showSuitsPriority(suitsPriority: List<Suit>)
         fun resetView()
+        fun startRounds()
     }
 
     companion object {

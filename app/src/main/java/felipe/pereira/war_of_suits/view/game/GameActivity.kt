@@ -11,6 +11,7 @@ import felipe.pereira.war_of_suits.R
 import felipe.pereira.war_of_suits.view.game.enums.Result
 import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
 import felipe.pereira.war_of_suits.view.game.enums.Suit
+import felipe.pereira.war_of_suits.view.game.roundsresult.HistoryRoundsActivity
 import kotlinx.android.synthetic.main.activity_game.*
 import org.koin.java.KoinJavaComponent.inject
 
@@ -53,13 +54,13 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         }
 
         cardPlayedByMagneto.text = String.format(
-            getString(R.string.card_played),
+            getString(R.string.card_play),
             getString(R.string.magneto),
             "${round.magnetoCard.number}",
             round.magnetoCard.suit.name
         )
         cardPlayedByProfessor.text = String.format(
-            getString(R.string.card_played),
+            getString(R.string.card_play),
             getString(R.string.professor),
             "${round.professorCard.number}",
             round.professorCard.suit.name
@@ -89,6 +90,10 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
+    }
+
+    override fun startRounds() {
+        startActivity(HistoryRoundsActivity.getCallingIntent(this))
     }
 
     companion object {

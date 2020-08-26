@@ -11,4 +11,5 @@ interface Game {
     fun setSuitPriority(suits: List<Suit>)
     fun setPlayersCards(magnetoC: List<PokerCard>, professorC: List<PokerCard>)
     fun getSuitsPriority(): List<Suit>
+    fun getRounds(): List<RoundResult>
 }

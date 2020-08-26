@@ -40,6 +40,8 @@ class GameManager: Game {
 
     override fun getSuitsPriority(): List<Suit> = suitPriority
 
+    override fun getRounds(): List<RoundResult> = rounds.toList()
+
     companion object {
         private lateinit var suitPriority: List<Suit>
         private var magnetoCards: MutableList<PokerCard> = mutableListOf()

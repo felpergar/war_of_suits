@@ -22,4 +22,9 @@ class MainActivity : AppCompatActivity(), MainPresenter.MainView {
             startActivity(GameActivity.getCallingIntent(this))
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
+    }
 }

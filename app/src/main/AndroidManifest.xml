@@ -23,5 +23,9 @@
             android:name=".view.game.GameActivity"
             android:screenOrientation="portrait" />
 
+        <activity
+            android:name=".view.game.roundsresult.HistoryRoundsActivity"
+            android:screenOrientation="portrait" />
+
     </application>
 </manifest>
