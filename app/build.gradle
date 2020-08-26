@@ -21,6 +21,15 @@ android {
       proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
     }
   }
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_8
+    targetCompatibility JavaVersion.VERSION_1_8
+  }
+
+  kotlinOptions {
+    jvmTarget = "1.8"
+  }
 }
 
 dependencies {
@@ -31,6 +40,10 @@ dependencies {
 
   implementation "androidx.constraintlayout:constraintlayout:${versions.constraint_layout}"
 
+  implementation "org.koin:koin-core:${versions.koin_version}"
+  implementation "androidx.recyclerview:recyclerview:${versions.recycler_view}"
+  implementation "io.reactivex.rxjava3:rxandroid:${versions.rx_java}"
+  implementation "io.reactivex.rxjava3:rxjava:${versions.rx_java}"
 
   testImplementation 'junit:junit:4.12'
   testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:${versions.kotlin_mockito}"

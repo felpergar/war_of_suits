@@ -8,14 +8,15 @@ import android.view.View.VISIBLE
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import felipe.pereira.war_of_suits.R
-import felipe.pereira.war_of_suits.view.game.cardsmanager.PokerCardViewEntity
-import felipe.pereira.war_of_suits.view.game.cardsmanager.Result
-import felipe.pereira.war_of_suits.view.game.cardsmanager.Suit
+import felipe.pereira.war_of_suits.view.game.enums.Result
+import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
+import felipe.pereira.war_of_suits.view.game.enums.Suit
 import kotlinx.android.synthetic.main.activity_game.*
+import org.koin.java.KoinJavaComponent.inject
 
 class GameActivity : AppCompatActivity(), GamePresenter.GameView {
 
-    private val presenter by lazy { GamePresenter() }
+    private val presenter: GamePresenter by inject(GamePresenter::class.java)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,26 +30,23 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         initLiveData()
     }
 
-    override fun showSuitsPriority(suitsPriority: MutableList<Suit>) {
+    override fun showSuitsPriority(suitsPriority: List<Suit>) {
         val stringList = suitsPriority.map { it.name }
-        currentSuitPriorityTextView.text = stringList.fold("") {acc, new -> "$acc $new,"}
+        currentSuitPriorityTextView.text = stringList.fold("") {acc, new -> "$acc   $new"}
     }
 
     private fun initLiveData() {
-        presenter.currentScoreMagneto.observe(this, Observer {
-            currentScoreMagnetoTextView.text = it.size.toString()
+        presenter.currentScoreMagnetoLiveData.observe(this, Observer {
+            currentScoreMagnetoTextView.text = it
         })
-        presenter.currentScoreProfessor.observe(this, Observer {
-            currentScoreProfessorTextView.text = it.size.toString()
+        presenter.currentScoreProfessorLiveData.observe(this, Observer {
+            currentScoreProfessorTextView.text = it
         })
     }
 
-    override fun showResult(
-        result: Result,
-        magnetoCard: PokerCardViewEntity,
-        professorCard: PokerCardViewEntity
-    ) {
-        roundResultTextView.text = when (result) {
+    override fun showResult(round: RoundResultViewEntity) {
+
+        roundResultTextView.text = when (round.winner) {
             Result.MAGNETO -> getString(R.string.round_result, getString(R.string.magneto))
             Result.PROFESSOR -> getString(R.string.round_result, getString(R.string.professor))
             Result.EQUAL -> getString(R.string.round_equal)
@@ -57,14 +55,14 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         cardPlayedByMagneto.text = String.format(
             getString(R.string.card_played),
             getString(R.string.magneto),
-            "${magnetoCard.number}",
-            magnetoCard.suit.name
+            "${round.magnetoCard.number}",
+            round.magnetoCard.suit.name
         )
         cardPlayedByProfessor.text = String.format(
             getString(R.string.card_played),
             getString(R.string.professor),
-            "${professorCard.number}",
-            professorCard.suit.name
+            "${round.professorCard.number}",
+            round.professorCard.suit.name
         )
     }
 
@@ -86,6 +84,11 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         roundResultTextView.text = STRING_EMPTY
         roundResultTextView.visibility = VISIBLE
         finalResultTextView.visibility = GONE
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        presenter.detachView()
     }
 
     companion object {

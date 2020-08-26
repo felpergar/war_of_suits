@@ -2,9 +2,8 @@ package felipe.pereira.war_of_suits.view.game
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.mock
-import felipe.pereira.war_of_suits.common.shouldBe
-import felipe.pereira.war_of_suits.view.game.cardsmanager.PokerCardViewEntity
-import felipe.pereira.war_of_suits.view.game.cardsmanager.Result
+import felipe.pereira.war_of_suits.view.game.model.PokerCardViewEntity
+import felipe.pereira.war_of_suits.view.game.enums.Result
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
