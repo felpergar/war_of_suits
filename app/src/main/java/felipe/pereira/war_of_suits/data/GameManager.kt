@@ -9,6 +9,12 @@ import felipe.pereira.war_of_suits.view.game.enums.Suit
 class GameManager: Game {
 
     private val rounds: MutableList<RoundResult> = mutableListOf()
+    private lateinit var suitPriority: List<Suit>
+    private var magnetoCards: MutableList<PokerCard> = mutableListOf()
+    private var professorCards: MutableList<PokerCard> = mutableListOf()
+    private val discardedCardsMagneto: MutableList<PokerCard> = mutableListOf()
+    private val discardedCardsProfessor: MutableList<PokerCard> = mutableListOf()
+
 
     override fun getNextCards(): Pair<PokerCard, PokerCard> {
         val cards = Pair(magnetoCards.first(), professorCards.first())
@@ -41,13 +47,4 @@ class GameManager: Game {
     override fun getSuitsPriority(): List<Suit> = suitPriority
 
     override fun getRounds(): List<RoundResult> = rounds.toList()
-
-    companion object {
-        private lateinit var suitPriority: List<Suit>
-        private var magnetoCards: MutableList<PokerCard> = mutableListOf()
-        private var professorCards: MutableList<PokerCard> = mutableListOf()
-        private val discardedCardsMagneto: MutableList<PokerCard> = mutableListOf()
-        private val discardedCardsProfessor: MutableList<PokerCard> = mutableListOf()
-
-    }
 }
