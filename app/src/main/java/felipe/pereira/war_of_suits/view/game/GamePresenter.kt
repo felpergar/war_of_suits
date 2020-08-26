@@ -94,7 +94,6 @@ class GamePresenter(
         fun initView()
         fun showSuitsPriority(suitsPriority: List<Suit>)
         fun resetView()
-        fun showRounds()
     }
 
     companion object {

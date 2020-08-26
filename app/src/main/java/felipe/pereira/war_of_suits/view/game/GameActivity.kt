@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import felipe.pereira.war_of_suits.R
@@ -33,7 +34,7 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
 
     override fun showSuitsPriority(suitsPriority: List<Suit>) {
         val stringList = suitsPriority.map { it.name }
-        currentSuitPriorityTextView.text = stringList.fold("") {acc, new -> "$acc   $new"}
+        currentSuitPriorityTextView.text = stringList.fold("") { acc, new -> "$acc   $new" }
     }
 
     private fun initLiveData() {
@@ -46,7 +47,6 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
     }
 
     override fun showResult(round: RoundResultViewEntity) {
-
         roundResultTextView.text = when (round.winner) {
             Result.MAGNETO -> getString(R.string.round_result, getString(R.string.magneto))
             Result.PROFESSOR -> getString(R.string.round_result, getString(R.string.professor))
@@ -75,6 +75,7 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
             Result.PROFESSOR -> getString(R.string.final_result, getString(R.string.professor))
             Result.EQUAL -> getString(R.string.game_equal)
         }
+        showRoundsDialog()
     }
 
     override fun resetView() {
@@ -87,13 +88,22 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         finalResultTextView.visibility = GONE
     }
 
+    private fun showRoundsDialog() {
+        AlertDialog.Builder(this)
+            .setMessage(R.string.show_rounds)
+            .setPositiveButton(R.string.yes, { _, _ -> showRounds() })
+            .setNegativeButton(R.string.no, { _, _ -> })
+            .setCancelable(false)
+            .show()
+    }
+
+    private fun showRounds() {
+        startActivity(HistoryRoundsActivity.getCallingIntent(this))
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
-    }
-
-    override fun showRounds() {
-        startActivity(HistoryRoundsActivity.getCallingIntent(this))
     }
 
     companion object {

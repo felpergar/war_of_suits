@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">war_of_suits</string>
+  <string name="app_name">War of suits</string>
   <string name="play_game_button_text">PLAY</string>
   <string name="start_game_button_text">START</string>
   <string name="card_play">%1$s plays %2$s of %3$s</string>
@@ -16,4 +16,7 @@
   <string name="start_score">0</string>
   <string name="card_played">%1$s played %2$s of %3$s</string>
   <string name="winner">WINNER</string>
+  <string name="show_rounds">Do you want to see the rounds history?</string>
+  <string name="yes">YES</string>
+  <string name="no">NO</string>
 </resources>
