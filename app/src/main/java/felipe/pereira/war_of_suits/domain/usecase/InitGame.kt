@@ -9,12 +9,12 @@ class InitGame(
     private val game: Game,
     threadScheduler: Scheduler,
     postExecutionThread: Scheduler
-): UseCase<Unit, Unit>(threadScheduler, postExecutionThread) {
+) : UseCase<Unit, Unit>(threadScheduler, postExecutionThread) {
 
-    override fun buildUseCaseSingle(params: Unit): Single<Unit> {
+    override fun buildUseCaseSingle(params: Unit): Single<Unit> = Single.create { emitter ->
         deckProvider.createCards()
         val playersCards = deckProvider.getCardsShuffled()
         game.setPlayersCards(playersCards.first, playersCards.second)
-        return Single.create {  emitter ->  emitter.onSuccess(Unit) }
+        emitter.onSuccess(Unit)
     }
 }

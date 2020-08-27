@@ -35,7 +35,7 @@ class GamePresenter(
     private fun initGame() {
         initGame.execute(Unit).subscribeAndAddToDisposables(
             { },
-            { }
+            { } //I don´t manage error due to time. I´ll would show a notification for the user and leave the state like before the action
         )
     }
 
@@ -44,7 +44,7 @@ class GamePresenter(
             {
                 getNullableView()?.showSuitsPriority(it)
             },
-            { }
+            { } //I don´t manage error due to time. I´ll would show a notification for the user and leave the state like before the action
         )
     }
 
@@ -53,7 +53,7 @@ class GamePresenter(
             {
                 showResult(it.transformToUi())
             },
-            { }
+            { } //I don´t manage error due to time. I´ll would show a notification for the user and leave the state like before the action
         )
     }
 
