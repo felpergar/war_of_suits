@@ -2,20 +2,25 @@ package felipe.pereira.war_of_suits.view.game
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import felipe.pereira.war_of_suits.R
 import felipe.pereira.war_of_suits.domain.usecase.GetSuitPriority
 import felipe.pereira.war_of_suits.domain.usecase.InitGame
 import felipe.pereira.war_of_suits.domain.usecase.PlayRound
+import felipe.pereira.war_of_suits.domain.usecase.ResetLastRound
 import felipe.pereira.war_of_suits.view.common.Presenter
 import felipe.pereira.war_of_suits.view.game.enums.Result
 import felipe.pereira.war_of_suits.view.game.enums.Suit
 import felipe.pereira.war_of_suits.view.game.model.PokerCardViewEntity
 import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
 import felipe.pereira.war_of_suits.view.game.model.transformToUi
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.functions.BiFunction
 
 class GamePresenter(
     private val initGame: InitGame,
     private val playRound: PlayRound,
     private val getSuitPriority: GetSuitPriority,
+    private val resetLastRound: ResetLastRound,
     private val currentScoreMagnetoMutableLiveData: MutableLiveData<String> = MutableLiveData<String>(),
     private val currentScoreProfessorMutableLiveData: MutableLiveData<String> = MutableLiveData<String>()
 ) : Presenter<GamePresenter.GameView>() {
@@ -29,23 +34,23 @@ class GamePresenter(
     override fun onViewAttached() {
         getNullableView()?.initView()
         initGame()
-        setSuitsPriority()
     }
 
     private fun initGame() {
-        initGame.execute(Unit).subscribeAndAddToDisposables(
-            { },
-            { } //I don´t manage error due to time. I´ll would show a notification for the user and leave the state like before the action
-        )
-    }
-
-    private fun setSuitsPriority() {
-        getSuitPriority.execute(Unit).subscribeAndAddToDisposables(
+       val disposable = Single.zip(initGame.execute(Unit), getSuitPriority.execute(Unit),
+       BiFunction<Unit, List<Suit>, List<Suit>> { none, suits ->  //if remove the explicit type arguments, app doesn´t compile
+           suits
+       }).subscribe(
             {
                 getNullableView()?.showSuitsPriority(it)
+                getNullableView()?.showToast(R.string.init_game)
             },
-            { } //I don´t manage error due to time. I´ll would show a notification for the user and leave the state like before the action
+            {
+                getNullableView()?.showToast(R.string.init_game_error)
+            }
         )
+
+        addToDisposable(disposable)
     }
 
     fun playRound() {
@@ -53,7 +58,10 @@ class GamePresenter(
             {
                 showResult(it.transformToUi())
             },
-            { } //I don´t manage error due to time. I´ll would show a notification for the user and leave the state like before the action
+            {
+                resetRound()
+                getNullableView()?.showToast(R.string.play_error)
+            }
         )
     }
 
@@ -78,9 +86,17 @@ class GamePresenter(
         }
     }
 
+    private fun resetRound() {
+        resetLastRound.execute(Unit).subscribeAndAddToDisposables(
+            { },
+            {
+                getNullableView()?.showToast(R.string.game_crash)
+            }
+        )
+    }
+
     fun resetGame() {
         initGame()
-        setSuitsPriority()
         discardedCardsMagneto.clear()
         discardedCardsProfessor.clear()
         currentScoreMagnetoMutableLiveData.postValue(discardedCardsMagneto.size.toString())
@@ -94,6 +110,7 @@ class GamePresenter(
         fun initView()
         fun showSuitsPriority(suitsPriority: List<Suit>)
         fun resetView()
+        fun showToast(messageId: Int)
     }
 
     companion object {

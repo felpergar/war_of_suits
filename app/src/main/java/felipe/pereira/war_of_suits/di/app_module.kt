@@ -17,10 +17,11 @@ val appModule = module {
 
     factory { InitGame(get(), get(), Schedulers.io(), AndroidSchedulers.mainThread()) }
     factory { PlayRound(get(), Schedulers.io(), AndroidSchedulers.mainThread()) }
+    factory { ResetLastRound(get(), Schedulers.io(), AndroidSchedulers.mainThread()) }
     factory { GetSuitPriority(get(), get(), Schedulers.io(), AndroidSchedulers.mainThread()) }
     factory { GetRounds(get(), Schedulers.io(), AndroidSchedulers.mainThread()) }
     
-    factory { GamePresenter(get(), get(), get()) }
+    factory { GamePresenter(get(), get(), get(), get()) }
     factory { MainPresenter() }
     factory { HistoryRoundsPresenter(get()) }
 }

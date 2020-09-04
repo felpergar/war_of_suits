@@ -31,8 +31,12 @@ abstract class Presenter<V : Presenter.View> {
 
   fun <T> Single<T>.subscribeAndAddToDisposables(onSuccess: (T) -> Unit = {}, onError: (throwable: Throwable) -> Unit = {}): Disposable {
     val disposable = this.subscribe({ onSuccess(it) }, { onError(it) })
-    disposables.add(disposable)
+    addToDisposable(disposable)
     return disposable
+  }
+
+  fun addToDisposable(disposable: Disposable) {
+    disposables.add(disposable)
   }
 
   private fun getView(): V = view!!

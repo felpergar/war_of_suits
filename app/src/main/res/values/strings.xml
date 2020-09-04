@@ -19,4 +19,8 @@
   <string name="show_rounds">Do you want to see the rounds history?</string>
   <string name="yes">YES</string>
   <string name="no">NO</string>
+  <string name="init_game_error">Something was wrong to init the game please, reset the game</string>
+  <string name="init_game">The game is ready to play</string>
+  <string name="play_error">Something was wrong please, try again</string>
+  <string name="game_crash">Something was wrong while you´re playing please, reset the game</string>
 </resources>

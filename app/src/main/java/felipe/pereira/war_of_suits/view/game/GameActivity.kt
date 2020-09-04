@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -99,6 +100,10 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
 
     private fun showRounds() {
         startActivity(HistoryRoundsActivity.getCallingIntent(this))
+    }
+
+    override fun showToast(messageId: Int) {
+        Toast.makeText(this, getString(messageId), Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

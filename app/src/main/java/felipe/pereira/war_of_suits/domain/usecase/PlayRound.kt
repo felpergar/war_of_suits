@@ -34,7 +34,6 @@ class PlayRound(
             }
 
             val roundResult = RoundResult(result, magnetoCard, professorCard)
-
             game.saveRound(roundResult)
             emitter.onSuccess(roundResult)
         }
