@@ -97,7 +97,7 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
     }
 
     override fun showCrashDialog() {
-        this.showDialog(R.string.show_rounds, R.string.reset, presenter::resetGame, R.string.no, ::finish, false)
+        this.showDialog(R.string.game_crashs, R.string.reset, presenter::resetGame, R.string.no, ::finish, false)
     }
 
     private fun showRounds() {

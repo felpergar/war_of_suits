@@ -48,11 +48,17 @@ class GameManager : Game {
     }
 
     override fun setPlayersCards(magnetoC: List<PokerCard>, professorC: List<PokerCard>) {
-        magneto.cards.clear()
-        professor.cards.clear()
+        resetCards(magneto, magnetoC)
+        resetCards(professor, professorC)
         rounds.clear()
-        magneto.cards.addAll(magnetoC)
-        professor.cards.addAll(professorC)
+    }
+
+    private fun resetCards(player: PlayerCards, newCards: List<PokerCard>) {
+        with(player) {
+            cards.clear()
+            cards.addAll(newCards)
+            discardedCards.clear()
+        }
     }
 
     override fun getSuitsPriority(): List<Suit> = suitPriority
@@ -60,17 +66,20 @@ class GameManager : Game {
     override fun getRounds(): List<RoundResult> = rounds.toList()
 
     override fun resetLastRound() {
-        lastCardsPlayed?.let {
-            if (!magneto.cards.contains(it.first)) magneto.cards.add(it.first)
-            if(magneto.discardedCards.contains(it.first)) magneto.discardedCards.remove(it.first)
-            if(professor.discardedCards.contains(it.first)) professor.discardedCards.remove(it.first)
+        if (lastCardsPlayed != null) {
+            with(lastCardsPlayed) {
+                resetCardForPlayer(magneto, professor, this!!.first)
+                resetCardForPlayer(professor, magneto, this.second)
+                lastCardsPlayed = null
+            }
+        } else {
+            throw(GameCrashsException())
         }
+    }
 
-        lastCardsPlayed?.let {
-            if (!professor.cards.contains(it.second)) professor.cards.add(it.second)
-            if(magneto.discardedCards.contains(it.second)) magneto.discardedCards.remove(it.second)
-            if(professor.discardedCards.contains(it.second)) professor.discardedCards.remove(it.second)
-        }
-        lastCardsPlayed = null
+    private fun resetCardForPlayer(playerForThisCard: PlayerCards, otherPlayer: PlayerCards, card: PokerCard) {
+        if (!playerForThisCard.cards.contains(card)) playerForThisCard.cards.add(card)
+        if (playerForThisCard.discardedCards.contains(card)) playerForThisCard.discardedCards.remove(card)
+        if (otherPlayer.discardedCards.contains(card)) otherPlayer.discardedCards.remove(card)
     }
 }

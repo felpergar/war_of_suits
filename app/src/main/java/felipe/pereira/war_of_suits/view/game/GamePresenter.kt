@@ -3,7 +3,6 @@ package felipe.pereira.war_of_suits.view.game
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import felipe.pereira.war_of_suits.R
-import felipe.pereira.war_of_suits.domain.usecase.GetSuitPriority
 import felipe.pereira.war_of_suits.domain.usecase.InitGame
 import felipe.pereira.war_of_suits.domain.usecase.PlayRound
 import felipe.pereira.war_of_suits.domain.usecase.ResetLastRound
@@ -13,13 +12,10 @@ import felipe.pereira.war_of_suits.view.game.enums.Suit
 import felipe.pereira.war_of_suits.view.game.model.PokerCardViewEntity
 import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
 import felipe.pereira.war_of_suits.view.game.model.transformToUi
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.functions.BiFunction
 
 class GamePresenter(
     private val initGame: InitGame,
     private val playRound: PlayRound,
-    private val getSuitPriority: GetSuitPriority,
     private val resetLastRound: ResetLastRound,
     private val currentScoreMagnetoMutableLiveData: MutableLiveData<String> = MutableLiveData<String>(),
     private val currentScoreProfessorMutableLiveData: MutableLiveData<String> = MutableLiveData<String>()
@@ -37,10 +33,7 @@ class GamePresenter(
     }
 
     private fun initGame() {
-       val disposable = Single.zip(initGame.execute(Unit), getSuitPriority.execute(Unit),
-       BiFunction<Unit, List<Suit>, List<Suit>> { none, suits ->  //if remove the explicit type arguments, app doesn´t compile
-           suits
-       }).subscribe(
+       initGame.execute(Unit).subscribeAndAddToDisposables(
             {
                 getNullableView()?.showSuitsPriority(it)
                 getNullableView()?.showToast(R.string.init_game)
@@ -49,8 +42,6 @@ class GamePresenter(
                 getNullableView()?.showToast(R.string.init_game_error)
             }
         )
-
-        addToDisposable(disposable)
     }
 
     fun playRound() {

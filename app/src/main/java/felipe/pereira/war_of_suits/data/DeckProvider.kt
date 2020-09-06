@@ -10,9 +10,11 @@ class DeckProvider : Deck {
     private val cards = mutableListOf<PokerCard>()
 
     override fun createCards() {
-        Suit.values().forEach { suit ->
-            CardValue.values().forEach {
-                cards.add(PokerCard(it, suit))
+        if (cards.isEmpty()) {
+            Suit.values().forEach { suit ->
+                CardValue.values().forEach {
+                    cards.add(PokerCard(it, suit))
+                }
             }
         }
     }

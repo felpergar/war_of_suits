@@ -5,7 +5,6 @@ import com.nhaarman.mockitokotlin2.*
 import felipe.pereira.war_of_suits.common.shouldBe
 import felipe.pereira.war_of_suits.domain.model.PokerCard
 import felipe.pereira.war_of_suits.domain.model.RoundResult
-import felipe.pereira.war_of_suits.domain.usecase.GetSuitPriority
 import felipe.pereira.war_of_suits.domain.usecase.InitGame
 import felipe.pereira.war_of_suits.domain.usecase.PlayRound
 import felipe.pereira.war_of_suits.view.game.enums.CardValue
