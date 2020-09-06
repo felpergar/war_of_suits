@@ -90,7 +90,7 @@ class GamePresenter(
         resetLastRound.execute(Unit).subscribeAndAddToDisposables(
             { },
             {
-                getNullableView()?.showToast(R.string.game_crash)
+                getNullableView()?.showCrashDialog()
             }
         )
     }
@@ -111,6 +111,7 @@ class GamePresenter(
         fun showSuitsPriority(suitsPriority: List<Suit>)
         fun resetView()
         fun showToast(messageId: Int)
+        fun showCrashDialog()
     }
 
     companion object {

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import felipe.pereira.war_of_suits.R
+import felipe.pereira.war_of_suits.view.common.showDialog
 import felipe.pereira.war_of_suits.view.game.enums.Result
 import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
 import felipe.pereira.war_of_suits.view.game.enums.Suit
@@ -77,6 +78,7 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
             Result.EQUAL -> getString(R.string.game_equal)
         }
         showRoundsDialog()
+        playGameButton.isClickable = false
     }
 
     override fun resetView() {
@@ -87,15 +89,15 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
         roundResultTextView.text = STRING_EMPTY
         roundResultTextView.visibility = VISIBLE
         finalResultTextView.visibility = GONE
+        playGameButton.isClickable = true
     }
 
     private fun showRoundsDialog() {
-        AlertDialog.Builder(this)
-            .setMessage(R.string.show_rounds)
-            .setPositiveButton(R.string.yes, { _, _ -> showRounds() })
-            .setNegativeButton(R.string.no, { _, _ -> })
-            .setCancelable(false)
-            .show()
+        this.showDialog(R.string.show_rounds, R.string.yes, ::showRounds, R.string.no, { }, false)
+    }
+
+    override fun showCrashDialog() {
+        this.showDialog(R.string.show_rounds, R.string.reset, presenter::resetGame, R.string.no, ::finish, false)
     }
 
     private fun showRounds() {
