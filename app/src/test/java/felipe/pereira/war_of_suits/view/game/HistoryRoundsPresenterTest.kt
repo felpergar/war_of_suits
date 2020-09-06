@@ -14,16 +14,11 @@ import felipe.pereira.war_of_suits.view.game.roundsresult.HistoryRoundsPresenter
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 
 class HistoryRoundsPresenterTest {
 
     private lateinit var presenter: HistoryRoundsPresenter
-
-    @Mock
     private lateinit var view: HistoryRoundsActivity
-
-    @Mock
     private lateinit var getRounds: GetRounds
 
     @Before

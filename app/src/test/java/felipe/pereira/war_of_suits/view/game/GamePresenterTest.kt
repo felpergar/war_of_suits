@@ -7,6 +7,7 @@ import felipe.pereira.war_of_suits.domain.model.PokerCard
 import felipe.pereira.war_of_suits.domain.model.RoundResult
 import felipe.pereira.war_of_suits.domain.usecase.InitGame
 import felipe.pereira.war_of_suits.domain.usecase.PlayRound
+import felipe.pereira.war_of_suits.domain.usecase.ResetLastRound
 import felipe.pereira.war_of_suits.view.game.enums.CardValue
 import felipe.pereira.war_of_suits.view.game.enums.Result
 import felipe.pereira.war_of_suits.view.game.enums.Suit
@@ -14,31 +15,30 @@ import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
 import io.reactivex.rxjava3.core.Single
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 
 class GamePresenterTest {
 
     private lateinit var presenter: GamePresenter
     private lateinit var initGame: InitGame
     private lateinit var playRound: PlayRound
-    private lateinit var getSuitPriority: GetSuitPriority
+    private lateinit var resetLastRound: ResetLastRound
     private lateinit var currentScoreMagnetoMutableLiveData: MutableLiveData<String>
     private lateinit var currentScoreProfessorMutableLiveData: MutableLiveData<String>
+    private lateinit var view: GameActivity
 
-    @Mock private lateinit var view: GameActivity
+    private val suits = listOf(Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES)
 
     @Before
     fun `set up`() {
         view = mock()
         initGame = mock()
         playRound = mock()
-        getSuitPriority = mock()
+        resetLastRound = mock()
         currentScoreMagnetoMutableLiveData = mock()
         currentScoreProfessorMutableLiveData = mock()
-        presenter = GamePresenter(initGame, playRound, getSuitPriority, currentScoreMagnetoMutableLiveData, currentScoreProfessorMutableLiveData)
+        presenter = GamePresenter(initGame, playRound, resetLastRound, currentScoreMagnetoMutableLiveData, currentScoreProfessorMutableLiveData)
 
-        whenever(initGame.execute(any())).thenReturn(Single.just(Unit))
-        whenever(getSuitPriority.execute(any())).thenReturn(Single.just(listOf()))
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
     }
 
     @Test
@@ -50,18 +50,8 @@ class GamePresenterTest {
     }
 
     @Test
-    fun `should execute getSuitPriority when view is attached`() {
-
-        presenter.attachView(view)
-
-        verify(getSuitPriority).execute(any())
-    }
-
-    @Test
-    fun `should execute showSuitsPriority when getSuitPriority was successful`() {
-        val suits = listOf(Suit.CLUBS, Suit.DIAMONDS, Suit.HEARTS, Suit.SPADES)
+    fun `should execute showSuitsPriority when initGame was successful`() {
         val captor = argumentCaptor<List<Suit>>()
-        whenever(getSuitPriority.execute(any())).thenReturn(Single.just(suits))
 
         presenter.attachView(view)
 
@@ -95,14 +85,6 @@ class GamePresenterTest {
         presenter.resetGame()
 
         verify(initGame).execute(any())
-    }
-
-    @Test
-    fun `should execute getSuitPriority when resetGame is executed`() {
-
-        presenter.resetGame()
-
-        verify(getSuitPriority).execute(any())
     }
 
     @Test

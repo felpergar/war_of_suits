@@ -11,11 +11,10 @@ import felipe.pereira.war_of_suits.view.game.enums.Result
 import felipe.pereira.war_of_suits.view.game.enums.Suit
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Mock
 
 class PlayRoundTest {
 
-    @Mock private lateinit var game: Game
+    private lateinit var game: Game
     private lateinit var useCase: PlayRound
     private val captor = argumentCaptor<RoundResult>()
 
