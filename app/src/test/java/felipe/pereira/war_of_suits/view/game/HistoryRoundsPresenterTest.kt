@@ -68,4 +68,13 @@ class HistoryRoundsPresenterTest {
         captor.firstValue[1].professorCard.suit shouldBe round2.professorCard.suit
         captor.firstValue[1].professorCard.number shouldBe round2.professorCard.number
     }
+
+    @Test
+    fun `should execute showDialogError when getRounds throw an error`() {
+        whenever(getRounds.execute(any())).thenReturn(Single.error(Throwable()))
+
+        presenter.attachView(view)
+
+        verify(view).showDialogError()
+    }
 }

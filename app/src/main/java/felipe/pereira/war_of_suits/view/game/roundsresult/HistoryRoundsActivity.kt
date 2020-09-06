@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import felipe.pereira.war_of_suits.R
+import felipe.pereira.war_of_suits.view.common.showDialog
 import felipe.pereira.war_of_suits.view.game.model.RoundResultViewEntity
 import kotlinx.android.synthetic.main.activity_history_rounds.*
 import org.koin.java.KoinJavaComponent.inject
@@ -34,12 +35,24 @@ class HistoryRoundsActivity : AppCompatActivity(), HistoryRoundsPresenter.Histor
         roundsAdapter.setItems(rounds)
     }
 
+    override fun showDialogError() {
+        this.showDialog(
+            R.string.rounds_error,
+            R.string.yes,
+            presenter::getRounds,
+            R.string.no,
+            ::finish,
+            false
+        )
+    }
+
     override fun onDestroy() {
         super.onDestroy()
         presenter.detachView()
     }
 
-    companion object{
-        fun getCallingIntent(context: Context): Intent = Intent(context, HistoryRoundsActivity::class.java)
+    companion object {
+        fun getCallingIntent(context: Context): Intent =
+            Intent(context, HistoryRoundsActivity::class.java)
     }
 }

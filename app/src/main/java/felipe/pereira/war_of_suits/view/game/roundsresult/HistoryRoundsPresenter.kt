@@ -14,14 +14,14 @@ class HistoryRoundsPresenter(
         getRounds()
     }
 
-    private fun getRounds() {
+    fun getRounds() {
         getRounds.execute(Unit).subscribeAndAddToDisposables(
             { rounds ->
                 val results = rounds.map { it.transformToUi() }
                 getNullableView()?.setItems(results)
             },
             {
-
+                getNullableView()?.showDialogError()
             }
         )
     }
@@ -29,5 +29,6 @@ class HistoryRoundsPresenter(
     interface HistoryRoundsView : View {
         fun initView()
         fun setItems(rounds: List<RoundResultViewEntity>)
+        fun showDialogError()
     }
 }
