@@ -2,6 +2,7 @@ package felipe.pereira.war_of_suits.view.game
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.*
+import felipe.pereira.war_of_suits.R
 import felipe.pereira.war_of_suits.common.shouldBe
 import felipe.pereira.war_of_suits.domain.model.PokerCard
 import felipe.pereira.war_of_suits.domain.model.RoundResult
@@ -37,12 +38,11 @@ class GamePresenterTest {
         currentScoreMagnetoMutableLiveData = mock()
         currentScoreProfessorMutableLiveData = mock()
         presenter = GamePresenter(initGame, playRound, resetLastRound, currentScoreMagnetoMutableLiveData, currentScoreProfessorMutableLiveData)
-
-        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
     }
 
     @Test
     fun `should execute initGame when view is attached`() {
+        whenever(initGame.execute(Unit)).thenReturn(Single.just(suits))
 
         presenter.attachView(view)
 
@@ -52,6 +52,7 @@ class GamePresenterTest {
     @Test
     fun `should execute showSuitsPriority when initGame was successful`() {
         val captor = argumentCaptor<List<Suit>>()
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
 
         presenter.attachView(view)
 
@@ -63,9 +64,32 @@ class GamePresenterTest {
     }
 
     @Test
+    fun `should execute showToast when initGame was successful`() {
+        val captor = argumentCaptor<Int>()
+        whenever(initGame.execute(Unit)).thenReturn(Single.just(suits))
+
+        presenter.attachView(view)
+
+        verify(view).showToast(captor.capture())
+        captor.firstValue shouldBe R.string.init_game
+    }
+
+    @Test
+    fun `should execute showToast when initGame throw an error`() {
+        val captor = argumentCaptor<Int>()
+        whenever(initGame.execute(any())).thenReturn(Single.error(Throwable()))
+
+        presenter.attachView(view)
+
+        verify(view).showToast(captor.capture())
+        captor.firstValue shouldBe R.string.init_game_error
+    }
+
+    @Test
     fun `should execute showResult in view when playRound was successful`() {
         val result = RoundResult(Result.EQUAL, PokerCard(CardValue.A, Suit.SPADES), PokerCard(CardValue.EIGHT, Suit.HEARTS))
         whenever(playRound.execute(any())).thenReturn(Single.just(result))
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
         val captor = argumentCaptor<RoundResultViewEntity>()
 
         presenter.attachView(view)
@@ -81,6 +105,7 @@ class GamePresenterTest {
 
     @Test
     fun `should execute initGame when resetGame is executed`() {
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
 
         presenter.resetGame()
 
@@ -89,10 +114,37 @@ class GamePresenterTest {
 
     @Test
     fun `should execute resetView when resetGame is executed`() {
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
 
         presenter.attachView(view)
         presenter.resetGame()
 
         verify(view).resetView()
+    }
+
+    @Test
+    fun `should execute showToast when playRound throw an error`() {
+        val captor = argumentCaptor<Int>()
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
+        whenever(playRound.execute(any())).thenReturn(Single.error(Throwable()))
+        whenever(resetLastRound.execute(any())).thenReturn(Single.just(Unit))
+
+        presenter.attachView(view)
+        presenter.playRound()
+
+        verify(view, times(2)).showToast(captor.capture())
+        captor.firstValue shouldBe R.string.init_game
+        captor.secondValue shouldBe R.string.play_error
+    }
+
+    @Test
+    fun `should execute resetRound when playRound throw an error`() {
+        whenever(initGame.execute(any())).thenReturn(Single.just(suits))
+        whenever(playRound.execute(any())).thenReturn(Single.error(Throwable()))
+        whenever(resetLastRound.execute(any())).thenReturn(Single.just(Unit))
+
+        presenter.playRound()
+
+        verify(resetLastRound).execute(any())
     }
 }

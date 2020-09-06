@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import felipe.pereira.war_of_suits.R
@@ -97,7 +96,7 @@ class GameActivity : AppCompatActivity(), GamePresenter.GameView {
     }
 
     override fun showCrashDialog() {
-        this.showDialog(R.string.game_crashs, R.string.reset, presenter::resetGame, R.string.no, ::finish, false)
+        this.showDialog(R.string.game_crashed, R.string.reset, presenter::resetGame, R.string.no, ::finish, false)
     }
 
     private fun showRounds() {

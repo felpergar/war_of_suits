@@ -22,5 +22,5 @@
   <string name="init_game_error">Something was wrong to init the game please, reset the game</string>
   <string name="init_game">The game is ready to play</string>
   <string name="play_error">Something was wrong please, try again</string>
-  <string name="game_crashs">Something was wrong while you´re playing please, reset the game</string>
+  <string name="game_crashed">Something was wrong while you´re playing please, reset the game</string>
 </resources>

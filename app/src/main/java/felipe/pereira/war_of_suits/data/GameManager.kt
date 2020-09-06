@@ -73,12 +73,12 @@ class GameManager : Game {
                 lastCardsPlayed = null
             }
         } else {
-            throw(GameCrashsException())
+            throw(GameCrashedException())
         }
     }
 
     private fun resetCardForPlayer(playerForThisCard: PlayerCards, otherPlayer: PlayerCards, card: PokerCard) {
-        if (!playerForThisCard.cards.contains(card)) playerForThisCard.cards.add(card)
+        if (!playerForThisCard.cards.contains(card)) playerForThisCard.cards.add(0, card)
         if (playerForThisCard.discardedCards.contains(card)) playerForThisCard.discardedCards.remove(card)
         if (otherPlayer.discardedCards.contains(card)) otherPlayer.discardedCards.remove(card)
     }

@@ -67,8 +67,5 @@ class HistoryRoundsPresenterTest {
         captor.firstValue[1].magnetoCard.number shouldBe round2.magnetoCard.number
         captor.firstValue[1].professorCard.suit shouldBe round2.professorCard.suit
         captor.firstValue[1].professorCard.number shouldBe round2.professorCard.number
-
-
     }
-
 }
